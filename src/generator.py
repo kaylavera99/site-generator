@@ -1,5 +1,6 @@
 from markdown_blocks import markdown_to_html_node
 from htmlnode import HTMLNode
+from pathlib import Path
 import os
 import shutil
 
@@ -28,7 +29,18 @@ def copy_static_to_public(src, dest):
             print(f"Skipping unknown item: {src_path}")
 
 
-    
+def copy_files_recursive(source_dir_path, dest_dir_path):
+    if not os.path.exists(dest_dir_path):
+        os.mkdir(dest_dir_path)
+
+    for filename in os.listdir(source_dir_path):
+        from_path = os.path.join(source_dir_path, filename)
+        dest_path = os.path.join(dest_dir_path, filename)
+        print(f" * {from_path} -> {dest_path}")
+        if os.path.isfile(from_path):
+            shutil.copy(from_path, dest_path)
+        else:
+            copy_files_recursive(from_path, dest_path)    
         
 
 
@@ -101,38 +113,14 @@ def generate_page(from_path, template_path, dest_path):
 
 # The content path, the template to use and the path where it does
 def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
-    all_files = os.listdir(dir_path_content)
-    
-
-    for path in all_files:
-        src_dir = os.path.join(dir_path_content, path)
-        
-        dest_dir = os.path.join(dest_dir_path, path)
-
-        if path.lower().endswith(".md"):
-            base, _ = os.path.splitext(path)
-            new_file_name = base + ".html"
-            new_dest = os.path.join(dest_dir_path, new_file_name)
-            print(f'Generating file {src_dir} to {new_dest}')
-            generate_page(src_dir, template_path, new_dest)
-            #shutil.copy(src_dir, dest_dir)
-        elif os.path.isdir(src_dir):
-            print(f'creating directory: {path} in {dest_dir}')
-            generate_pages_recursive(src_dir, template_path, dest_dir)
-
-            os.makedirs(dest_dir, exist_ok=True)
-            copy_static_to_public(src_dir, dest_dir)
-    
+    for filename in os.listdir(dir_path_content):
+        from_path = os.path.join(dir_path_content, filename)
+        dest_path = os.path.join(dest_dir_path, filename)
+        if os.path.isfile(from_path):
+            dest_path = Path(dest_path).with_suffix(".html")
+            generate_page(from_path, template_path, dest_path)
+        else:
+            generate_pages_recursive(from_path, template_path, dest_path)
 
 
-def main():
-    heading = """# Heading 1
-    ## Heading 2
-    - list item
-    """
 
-  
-    
-    #generate_pages_recursive('./content', './template.html', './public')
-
-main()

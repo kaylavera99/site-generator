@@ -4,6 +4,7 @@ from textnode import TextNode, TextType
 
 
 def text_to_textnodes(text):
+    text = re.sub(r'_(\S[^_]*\S)_', r'*\1*', text)
     nodes = [TextNode(text, TextType.TEXT)]
     nodes = split_nodes_delimiter(nodes, "**", TextType.BOLD)
     nodes = split_nodes_delimiter(nodes, "*", TextType.ITALIC)
