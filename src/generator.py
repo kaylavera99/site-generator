@@ -92,8 +92,8 @@ def generate_page(from_path, template_path, dest_path, basepath):
     replaced_title = temp_file_content.replace("{{ Title }}", md_title)
     #Replacing the content
     replaced_content = replaced_title.replace("{{ Content }}", rendered)
-    from_file_content = temp_file_content.replace('href="/', 'href="' + basepath)
-    from_file_content = temp_file_content.replace('src="/', 'src="' + basepath)
+    replaced_content = replaced_content.replace('href="/', 'href="' + basepath)
+    replaced_content = replaced_content.replace('src="/', 'src="' + basepath)
     
 
     # Name of the file we want to create
