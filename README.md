@@ -69,4 +69,5 @@ Run the test suite:
 python -m unittest discover
 ```
 
-
+## Acknowledgements
+This project was created as part of the [Boot.dev](https://boot.dev) backend development learning path. It serves as the capstone for the "Build a Static Site Generator" course, where students build a fully functional SSG from scratch using Python and the standard library.
